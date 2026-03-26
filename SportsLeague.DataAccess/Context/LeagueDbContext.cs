@@ -10,7 +10,7 @@ namespace SportsLeague.DataAccess.Context
         {
         }
         public DbSet<Team> Teams => Set<Team>();
-
+        public DbSet<Player> Players => Set<Player>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -34,6 +34,37 @@ namespace SportsLeague.DataAccess.Context
                 .IsRequired(false);
                 entity.HasIndex(t => t.Name)
                 .IsUnique();
+            });
+
+            modelBuilder.Entity<Player>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Firstname)
+                    .IsRequired()
+                    .HasMaxLength(80);
+                entity.Property(p => p.Lastname)
+                    .IsRequired()
+                    .HasMaxLength(80);
+                entity.Property(p => p.BirthDate)
+                    .IsRequired();
+                entity.Property(p => p.Number)
+                    .IsRequired();
+                entity.Property(p => p.Position)
+                    .IsRequired();
+                entity.Property(p => p.CreateAt)
+                    .IsRequired();
+                entity.Property(p => p.UpdateAt)
+                    .IsRequired(false);
+
+                // Relación 1:N con Team
+                entity.HasOne(p => p.Team)
+                    .WithMany(t => t.Players)
+                    .HasForeignKey(p => p.TeamId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Índice único compuesto: número de camiseta único por equipo
+                entity.HasIndex(p => new { p.TeamId, p.Number })
+                    .IsUnique();
             });
 
 
