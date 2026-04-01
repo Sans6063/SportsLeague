@@ -162,6 +162,7 @@ namespace SportsLeague.Domain.Services
             var tournamentTeams = await _tournamentTeamRepository
                 .GetByTournamentAsync(tournamentId);
             return tournamentTeams.Select(tt => tt.Team);
+
         }
     }
 }
