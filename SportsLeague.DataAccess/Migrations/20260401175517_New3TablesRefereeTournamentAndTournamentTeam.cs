@@ -121,6 +121,8 @@ namespace SportsLeague.DataAccess.Migrations
                 oldType: "nvarchar(500)",
                 oldMaxLength: 500,
                 oldNullable: true);
+
+
         }
     }
 }
