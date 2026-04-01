@@ -9,67 +9,140 @@ namespace SportsLeague.DataAccess.Context
             : base(options)
         {
         }
+
         public DbSet<Team> Teams => Set<Team>();
         public DbSet<Player> Players => Set<Player>();
+        public DbSet<Referee> Referees => Set<Referee>();
+        public DbSet<Tournament> Tournaments => Set<Tournament>();
+        public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>();
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // ── Team Configuration ──
             modelBuilder.Entity<Team>(entity =>
             {
                 entity.HasKey(t => t.Id);
                 entity.Property(t => t.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+                      .IsRequired()
+                      .HasMaxLength(100);
                 entity.Property(t => t.City)
-                .IsRequired()
-                .HasMaxLength(100);
+                      .IsRequired()
+                      .HasMaxLength(100);
                 entity.Property(t => t.Stadium)
-                .HasMaxLength(150);
+                      .HasMaxLength(150);
                 entity.Property(t => t.LogoUrl)
-                .HasMaxLength(150);
+                      .HasMaxLength(500);
                 entity.Property(t => t.CreatedAt)
-                .IsRequired();
+                      .IsRequired();
                 entity.Property(t => t.UpdateAt)
-                .IsRequired(false);
+                      .IsRequired(false);
                 entity.HasIndex(t => t.Name)
-                .IsUnique();
+                      .IsUnique();
             });
 
+            // ── Player Configuration ──
             modelBuilder.Entity<Player>(entity =>
             {
                 entity.HasKey(p => p.Id);
                 entity.Property(p => p.Firstname)
-                    .IsRequired()
-                    .HasMaxLength(80);
+                      .IsRequired()
+                      .HasMaxLength(80);
                 entity.Property(p => p.Lastname)
-                    .IsRequired()
-                    .HasMaxLength(80);
+                      .IsRequired()
+                      .HasMaxLength(80);
                 entity.Property(p => p.BirthDate)
-                    .IsRequired();
+                      .IsRequired();
                 entity.Property(p => p.Number)
-                    .IsRequired();
+                      .IsRequired();
                 entity.Property(p => p.Position)
-                    .IsRequired();
+                      .IsRequired();
                 entity.Property(p => p.CreateAt)
-                    .IsRequired();
+                      .IsRequired();
                 entity.Property(p => p.UpdateAt)
-                    .IsRequired(false);
+                      .IsRequired(false);
 
                 // Relación 1:N con Team
                 entity.HasOne(p => p.Team)
-                    .WithMany(t => t.Players)
-                    .HasForeignKey(p => p.TeamId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                      .WithMany(t => t.Players)
+                      .HasForeignKey(p => p.TeamId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
                 // Índice único compuesto: número de camiseta único por equipo
                 entity.HasIndex(p => new { p.TeamId, p.Number })
-                    .IsUnique();
+                      .IsUnique();
             });
 
+            // ── Referee Configuration ──
+            modelBuilder.Entity<Referee>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.FirstName)
+                      .IsRequired()
+                      .HasMaxLength(80);
+                entity.Property(r => r.LastName)
+                      .IsRequired()
+                      .HasMaxLength(80);
+                entity.Property(r => r.Nationality)
+                      .IsRequired()
+                      .HasMaxLength(80);
+                entity.Property(r => r.CreateAt)
+                      .IsRequired();
+                entity.Property(r => r.UpdateAt)
+                      .IsRequired(false);
+            });
 
+            // ── Tournament Configuration ──
+            modelBuilder.Entity<Tournament>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Name)
+                      .IsRequired()
+                      .HasMaxLength(150);
+                entity.Property(t => t.Season)
+                      .IsRequired()
+                      .HasMaxLength(20);
+                entity.Property(t => t.StartDate)
+                      .IsRequired();
+                entity.Property(t => t.EndDate)
+                      .IsRequired();
+                entity.Property(t => t.Status)
+                      .IsRequired();
+                entity.Property(t => t.CreateAt)
+                      .IsRequired();
+                entity.Property(t => t.UpdateAt)
+                      .IsRequired(false);
+            });
 
+            // ── TournamentTeam Configuration ──
+            modelBuilder.Entity<TournamentTeam>(entity =>
+            {
+                entity.HasKey(tt => tt.Id);
+                entity.Property(tt => tt.RegisteredAt)
+                      .IsRequired();
+                entity.Property(tt => tt.CreateAt)
+                      .IsRequired();
+                entity.Property(tt => tt.UpdateAt)
+                      .IsRequired(false);
 
+                // Relación con Tournament
+                entity.HasOne(tt => tt.Tournament)
+                      .WithMany(t => t.TournamentTeams)
+                      .HasForeignKey(tt => tt.TournamentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Relación con Team
+                entity.HasOne(tt => tt.Team)
+                      .WithMany(t => t.TournamentTeams)
+                      .HasForeignKey(tt => tt.TeamId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Índice único compuesto: un equipo solo una vez por torneo
+                entity.HasIndex(tt => new { tt.TournamentId, tt.TeamId })
+                      .IsUnique();
+            });
         }
     }
 }
