@@ -15,6 +15,7 @@ namespace SportsLeague.DataAccess.Context
         public DbSet<Referee> Referees => Set<Referee>();
         public DbSet<Tournament> Tournaments => Set<Tournament>();
         public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>();
+        public DbSet<Sponsor> Sponsors => Set<Sponsor>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -142,6 +143,16 @@ namespace SportsLeague.DataAccess.Context
                 // Índice único compuesto: un equipo solo una vez por torneo
                 entity.HasIndex(tt => new { tt.TournamentId, tt.TeamId })
                       .IsUnique();
+            });
+            modelBuilder.Entity<Sponsor>(entity =>
+            {
+                //Indice unico en el nombre
+                entity.HasIndex(s => s.Name)
+                .IsUnique();
+            });
+            modelBuilder.Entity<TournamentSponsor>(entity =>
+            {
+
             });
         }
     }

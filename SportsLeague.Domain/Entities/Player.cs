@@ -1,7 +1,4 @@
 ﻿using SportsLeague.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SportsLeague.Domain.Entities
 {
@@ -13,7 +10,7 @@ namespace SportsLeague.Domain.Entities
 
         public DateTime BirthDate { get; set; }
 
-        public int Number {  get; set; }
+        public int Number { get; set; }
 
         public PlayerPosition Position { get; set; }
 
