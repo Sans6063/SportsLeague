@@ -77,6 +77,7 @@ namespace SportsLeague.Domain.Services
             catch
             {
                 return false;
+
             }
         }
     }
