@@ -16,6 +16,7 @@ namespace SportsLeague.DataAccess.Context
         public DbSet<Tournament> Tournaments => Set<Tournament>();
         public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>();
         public DbSet<Sponsor> Sponsors => Set<Sponsor>();
+        public DbSet<TournamentSponsor> TournamentSponsors => Set<TournamentSponsor>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -146,14 +147,58 @@ namespace SportsLeague.DataAccess.Context
             });
             modelBuilder.Entity<Sponsor>(entity =>
             {
-                //Indice unico en el nombre
+                entity.HasKey(s => s.Id);
+
+                entity.Property(s => s.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(s => s.Contactemail)
+                    .IsRequired();
+
+                entity.Property(s => s.Phone);
+
+                entity.Property(s => s.Websiteurl);
+
+                entity.Property(s => s.Category)
+                    .IsRequired();
+
+                entity.Property(s => s.CreateAt)
+                    .IsRequired();
+
+                entity.Property(s => s.UpdateAt);
+
+                //Indice unico
                 entity.HasIndex(s => s.Name)
-                .IsUnique();
+                    .IsUnique();
             });
+
             modelBuilder.Entity<TournamentSponsor>(entity =>
             {
+                entity.HasKey(ts => ts.Id);
 
+                entity.Property(ts => ts.ContractAmount)
+                    .IsRequired();
+
+                entity.Property(ts => ts.JoinedAt)
+                    .IsRequired();
+
+                entity.HasOne(ts => ts.Tournament)
+                    .WithMany(t => t.TournamentSponsors)
+                    .HasForeignKey(ts => ts.TournamentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(ts => ts.Sponsor)
+                    .WithMany(s => s.TournamentSponsors)
+                    .HasForeignKey(ts => ts.SponsorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+               
+                //Indice unico
+               entity.HasIndex(ts => new { ts.TournamentId, ts.SponsorId })
+                    .IsUnique();
             });
+
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SportsLeague.API.DTOs.Response
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SportsLeague.API.DTOs.Response
 {
     public class TournamentSponsorResponseDTO
     {
