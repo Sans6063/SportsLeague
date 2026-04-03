@@ -4,7 +4,6 @@ namespace SportsLeague.Domain.Entities
 {
     public class TournamentSponsor : AuditBase
     {
-        public int Id { get; set; }
 
         public int TournamentId { get; set; }
 
@@ -16,8 +15,8 @@ namespace SportsLeague.Domain.Entities
 
         //Propiedades de navegación
 
-        public Tournament Tournament { get; set; }
+        public Tournament? Tournament { get; set; }
 
-        public Sponsor Sponsor { get; set; }
+        public Sponsor? Sponsor { get; set; }
     }
 }

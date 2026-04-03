@@ -16,7 +16,7 @@ namespace SportsLeague.DataAccess.Repositories
         }
         public async Task<bool> ExistsAsync(int sponsorId, int tournamentId)
         {
-            return await _context.Tournamentsponsors
+            return await _context.TournamentSponsors
                 .AnyAsync(ts => ts.SponsorId == sponsorId && ts.TournamentId == tournamentId);
         }
         public async Task<IEnumerable<TournamentSponsor>> GetBySponsorIdAsync(int sponsorId)
