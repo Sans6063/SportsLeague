@@ -2,16 +2,18 @@
 using SportsLeague.Domain.Entities;
 using SportsLeague.Domain.Interfaces.Repositories;
 using SportsLeague.Domain.Interfaces.Services;
+using System.Runtime.CompilerServices;
 
 namespace SportsLeague.Domain.Services
 {
     public class SponsorService : ISponsorService
     {
         private readonly ISponsorRepository _sponsorRepository;
-
+       
         public SponsorService(ISponsorRepository sponsorRepository)
         {
             _sponsorRepository = sponsorRepository;
+            
         }
 
         public async Task<IEnumerable<Sponsor>> GetAllAsync()
