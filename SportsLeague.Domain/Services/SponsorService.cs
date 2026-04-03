@@ -28,11 +28,11 @@ namespace SportsLeague.Domain.Services
         public async Task<Sponsor> CreateAsync(Sponsor sponsor)
         {
             //Verificar si el nombre ya existe
-            if (await _sponsorRepository.ExistsByNameAsync(Sponsor.name))
+            if (await _sponsorRepository.ExistsByNameAsync(sponsor.Name))
                 throw new InvalidOperationException("El nombre de este Sponsor ya existe");
 
             // Verificar si es un email valido
-            if (!IsValidEmail(Sponsor.ContactEmail))
+            if (!IsValidEmail(sponsor.Contactemail))
                 throw new InvalidOperationException("Email invalido");
 
             sponsor.CreateAt = DateTime.UtcNow;
@@ -45,7 +45,7 @@ namespace SportsLeague.Domain.Services
             if (existing == null)
                 throw new KeyNotFoundException("Sponsor no encontrado");
             //Verificar si el nombre ya existe
-            if(existing.Name != Sponsor.name && await _sponsorRepository.ExistsByNameAsync(Sponsor.name))
+            if(existing.Name != sponsor.Name && await _sponsorRepository.ExistsByNameAsync(sponsor.Name))
                 throw new InvalidOperationException("El nombre de este Sponsor ya existe");
             if (!IsValidEmail(sponsor.Contactemail))
                 throw new InvalidOperationException("Email invalido");
