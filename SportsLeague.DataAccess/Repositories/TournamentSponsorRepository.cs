@@ -18,6 +18,7 @@ namespace SportsLeague.DataAccess.Repositories
         {
             return await _context.TournamentSponsors
                 .AnyAsync(ts => ts.SponsorId == sponsorId && ts.TournamentId == tournamentId);
+
         }
         public async Task<IEnumerable<TournamentSponsor>> GetBySponsorIdAsync(int sponsorId)
         {
