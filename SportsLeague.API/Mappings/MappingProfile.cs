@@ -7,7 +7,7 @@ namespace SportsLeague.API.Mappings
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile() 
+        public MappingProfile()
         {
             //Team mapings
             CreateMap<TeamRequestDTO, Team>();
@@ -25,13 +25,27 @@ namespace SportsLeague.API.Mappings
             CreateMap<Referee, RefereeResponseDTO>();
 
             //Tournament mappings
-            CreateMap<TournamentRequestDTO,Tournament>();
+            CreateMap<TournamentRequestDTO, Tournament>();
             CreateMap<Tournament, TournamentResponseDTO>()
                 .ForMember(
                     dest => dest.TeamsCount,
                     opt => opt.MapFrom(src =>
                         src.TournamentTeams != null ? src.TournamentTeams.Count : 0));
-            //Sponsor mappings
+
+            //Match mappings 
+            CreateMap<MatchRequestDTO, Match>();
+            CreateMap<Match, MatchResponseDTO>()
+                .ForMember(dest => dest.TournamentName,
+                    opt => opt.MapFrom(src => src.Tournament.Name))
+                .ForMember(dest => dest.HomeTeamName,
+                    opt => opt.MapFrom(src => src.HomeTeam.Name))
+                .ForMember(dest => dest.AwayTeamName,
+                    opt => opt.MapFrom(src => src.AwayTeam.Name))
+                .ForMember(dest => dest.RefereeFullName,
+                    opt => opt.MapFrom(src =>
+                        src.Referee.FirstName + " " + src.Referee.LastName));
+            
+                //Sponsor mappings
             CreateMap<Sponsor, SponsorResponseDTO>();
             CreateMap<SponsorRequestDTO, Sponsor>();
 
