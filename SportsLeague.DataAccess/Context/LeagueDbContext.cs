@@ -26,6 +26,8 @@ namespace SportsLeague.DataAccess.Context
         
         public DbSet<Card> Cards => Set<Card>();
 
+        public DbSet<MatchLineup> MatchLineups => Set<MatchLineup>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -299,6 +301,22 @@ namespace SportsLeague.DataAccess.Context
                       .HasForeignKey(c => c.PlayerId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<MatchLineup>()
+                .HasIndex(ml => new { ml.MatchId, ml.PlayerId })
+                .IsUnique();
+
+            modelBuilder.Entity<MatchLineup>()
+                .HasOne(ml => ml.Match)
+                .WithMany()
+                .HasForeignKey(ml => ml.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MatchLineup>()
+                .HasOne(ml => ml.Player)
+                .WithMany()
+                .HasForeignKey(ml => ml.PlayerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
